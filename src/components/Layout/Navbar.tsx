@@ -1,0 +1,464 @@
+"use client";
+
+import type React from "react";
+import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  ShoppingCart,
+  Heart,
+  User,
+  Search,
+  Menu,
+  X,
+  LogOut,
+  Settings,
+  Package,
+  LayoutDashboard,
+  BadgePercent,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { logout } from "@/redux/features/auth/authSlice";
+import { CategoryDropdown } from "./CategoryDropdown";
+import {
+  useAppDispatch,
+  useAppSelector,
+  useDebounced,
+} from "@/redux/hooks/hooks";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import CartSlider from "./CartSlider";
+import WishlistSlider from "./WishlistSlider";
+import { useGetWishlistQuery } from "@/redux/api/wishlist/wishlistApi";
+import { useGetCartQuery } from "@/redux/api/cart/cartApi";
+import { useGetAllProductsQuery } from "@/redux/api/product/productApi";
+import { useGetUserProfileQuery } from "@/redux/api/user/userApi";
+import { IProduct } from "@/types";
+import { ModeToggle } from "../ModeToggle/ModeToggle";
+
+export function Navbar({
+  onCartClick,
+  onWishlistClick,
+}: {
+  onCartClick: () => void;
+  onWishlistClick: () => void;
+}) {
+  const router = useRouter();
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isWishlistOpen, setIsWishlistOpen] = useState(false);
+  const { data: cartData } = useGetCartQuery({});
+  const { data: wishlist } = useGetWishlistQuery({});
+  const [isFocused, setIsFocused] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
+
+  console.log(cartData?.data[0]);
+
+  const debouncedTerm = useDebounced({
+    searchQuery: searchQuery,
+    delay: 500,
+  });
+
+  const { data: productsData, isLoading } = useGetAllProductsQuery({
+    searchTerm: debouncedTerm,
+  });
+
+  // Redux state
+  const { user, token } = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
+  const { data: userData, refetch } = useGetUserProfileQuery({});
+
+  useEffect(() => {
+    if (user) {
+      refetch();
+    }
+  }, [user, refetch]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 0);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      searchRef.current &&
+      !searchRef.current.contains(event.target as Node)
+    ) {
+      setIsFocused(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const navItems = [
+    { name: "Home", href: "/" },
+    { name: "Products", href: "/products" },
+    { name: "Categories", href: "#category" },
+    { name: "About", href: "#about" },
+    { name: "Contact", href: "#contact" },
+  ];
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/products?searchTerm=${searchQuery}`);
+      setSearchQuery("");
+      setIsFocused(false);
+    }
+  };
+
+  const handleLogout = () => {
+    dispatch(logout());
+    router.push("/signin");
+    toast.success("Logged out successfully!");
+  };
+
+  const getInitials = (name: string) => {
+    return name
+      .split(" ")
+      .map((word) => word.charAt(0))
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
+  const handleCartClick = () => {
+    setIsCartOpen(true);
+    setIsWishlistOpen(false); // Close wishlist if open
+  };
+
+  const handleWishlistClick = () => {
+    setIsWishlistOpen(true);
+    setIsCartOpen(false); // Close cart if open
+  };
+
+  const isAuthenticated = user && token;
+
+  return (
+    <>
+      <header
+       className="border-b"
+      >
+        <div className="container mx-auto px-2 sm:px-4">
+          <div className="flex h-14 sm:h-16 items-center justify-between gap-2 sm:gap-2">
+            {/* Logo */}
+            <Link
+              href="/"
+              className="flex items-center space-x-2 flex-shrink-0"
+            >
+              <div className="h-7 sm:h-8 w-7 sm:w-8 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-md">
+                <span className="text-primary-foreground font-bold text-base sm:text-lg">
+                  D
+                </span>
+              </div>
+              <span
+                className={`font-bold text-lg sm:text-xl hidden lg:flex ${
+                  isScrolled
+                    ? "bg-gradient-to-r from-white to-accent"
+                    : "bg-gradient-to-r from-primary to-accent"
+                } bg-clip-text text-transparent`}
+              >
+                DeviceMart
+              </span>
+            </Link>
+
+            {/* Mobile Search */}
+            <div className=" flex md:hidden lg:hidden w-full">
+              <form onSubmit={handleSearch} className="relative w-full">
+                <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  type="text"
+                  placeholder="Search products..."
+                  value={searchQuery}
+                  onFocus={() => setIsFocused(true)}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-8 pr-3 h-8 text-xs bg-muted/50 border-muted-foreground/20 min-w-[230px] w-full max-w-full"
+                />
+                {isFocused && debouncedTerm && (
+                  <div className="absolute top-full mt-2 w-full bg-background border rounded-md shadow-lg z-[1000] max-h-80 overflow-y-auto pointer-events-auto">
+                    {isLoading ? (
+                      <div className="p-4 text-center">Loading...</div>
+                    ) : (
+                      <>
+                        {productsData && productsData.data.length > 0 ? (
+                          <ul>
+                            {productsData.data.map((product: IProduct) => (
+                              <li
+                                key={product.id}
+                                className="pointer-events-auto"
+                              >
+                                <Link
+                                  href={`/products/${product.id}`}
+                                  className="block p-2 hover:bg-muted pointer-events-auto"
+                                  onTouchStart={() => {
+                                    router.push(`/products/${product.id}`);
+                                    setIsFocused(false);
+                                    setSearchQuery("");
+                                  }}
+                                >
+                                  {product.name}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <div className="p-4 text-center">
+                            No products found
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </div>
+                )}
+              </form>
+            </div>
+
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex items-center space-x-4 xl:space-x-6">
+              {navItems.map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className="text-xs sm:text-sm font-medium transition-colors hover:text-primary relative group"
+                >
+                  {item.name}
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-accent transition-all group-hover:w-full"></span>
+                </Link>
+              ))}
+            </nav>
+
+            {/* Search Bar */}
+            <div
+              className="flex-1 max-w-xs sm:max-w-sm md:max-w-md mx-2 sm:mx-4 hidden sm:block"
+              ref={searchRef}
+            >
+              <form onSubmit={handleSearch} className="relative">
+                <Search className="absolute left-2 sm:left-3 top-1/2 transform -translate-y-1/2 h-3 sm:h-4 w-3 sm:w-4 text-muted-foreground" />
+                <Input
+                  type="text"
+                  placeholder="Search products..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => setIsFocused(true)}
+                  className="pl-8 sm:pl-10 pr-3 sm:pr-4 h-8 sm:h-10 text-xs sm:text-sm bg-muted/50 border-muted-foreground/20 focus:border-primary focus:ring-primary/20"
+                />
+                {isFocused && debouncedTerm && (
+                  <div className="absolute top-full mt-2 w-full bg-background border rounded-md shadow-lg z-50 max-h-80 overflow-y-auto">
+                    {isLoading ? (
+                      <div className="p-4 text-center">Loading...</div>
+                    ) : (
+                      <>
+                        {productsData && productsData.data.length > 0 ? (
+                          <ul>
+                            {productsData.data.map((product: IProduct) => (
+                              <li key={product.id}>
+                                <Link
+                                  href={`/products/${product.id}`}
+                                  className="block p-2 hover:bg-muted"
+                                  onClick={() => {
+                                    setIsFocused(false);
+                                    setSearchQuery("");
+                                  }}
+                                >
+                                  {product.name}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <div className="p-4 text-center">
+                            No products found
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </div>
+                )}
+              </form>
+            </div>
+
+            {/* Right Side Actions */}
+            <div className="flex items-center space-x-1 sm:space-x-2">
+              {/* Offer */}
+              <Link href={`/offers`}>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="relative group p-1 sm:p-2 hidden lg:flex"
+                >
+                  <BadgePercent className="h-4 sm:h-5 w-4 sm:w-5 transition-colors group-hover:text-primary" />
+                </Button>
+              </Link>
+              {/* Wishlist */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="relative group p-1 sm:p-2 mr-0 hidden lg:flex"
+                onClick={handleWishlistClick}
+              >
+                <Heart className="h-4 sm:h-5 w-4 sm:w-5 transition-colors group-hover:text-primary" />
+                <span className="absolute -top-1 -right-1 h-3 sm:h-4 w-3 sm:w-4 rounded-full bg-gradient-to-r from-primary to-accent text-primary-foreground text-[0.6rem] sm:text-xs flex items-center justify-center shadow-md">
+                  {user?.role === "ADMIN" ? (
+                    0
+                  ) : (
+                    <span>
+                      {!user ? 0 : <span>{wishlist?.data.length}</span>}
+                    </span>
+                  )}
+                </span>
+              </Button>
+
+              {/* Cart */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="relative group p-1 sm:p-2 hidden lg:flex"
+                onClick={handleCartClick}
+              >
+                <ShoppingCart className="h-4 sm:h-5 w-4 sm:w-5 transition-colors group-hover:text-primary" />
+                <span className="absolute -top-1 -right-1 h-3 sm:h-4 w-3 sm:w-4 rounded-full bg-gradient-to-r from-accent to-accent/80 text-accent-foreground text-[0.6rem] sm:text-xs flex items-center justify-center shadow-md">
+                  {user?.role === "ADMIN" ? (
+                    0
+                  ) : (
+                    <span>
+                      {!user ? (
+                        0
+                      ) : (
+                        <span>{cartData?.data[0]?.items?.length}</span>
+                      )}
+                    </span>
+                  )}
+                </span>
+              </Button>
+
+              {/* User Account - Conditional Rendering */}
+              {isAuthenticated ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className="relative h-8 w-8 rounded-full p-0 hidden lg:flex"
+                    >
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage
+                          src={userData?.data?.avatarUrl || "/placeholder.svg"}
+                          alt={user?.name}
+                        />
+                        <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-primary-foreground text-xs font-semibold">
+                          {getInitials(user?.name)}
+                        </AvatarFallback>
+                      </Avatar>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56" align="end" forceMount>
+                    <DropdownMenuLabel className="font-normal">
+                      <div className="flex flex-col space-y-1">
+                        <p className="text-sm font-medium leading-none">
+                          {user?.name}
+                        </p>
+                        <p className="text-xs leading-none text-muted-foreground">
+                          {user?.email}
+                        </p>
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <Link href="/profile" className="cursor-pointer">
+                        <Settings className="mr-2 h-4 w-4" />
+                        <span>Manage Profile</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      {user?.role === "ADMIN" ? (
+                        <Link href="/admin" className="cursor-pointer">
+                          <LayoutDashboard className="mr-2 h-4 w-4" />
+                          <span>Dashboard</span>
+                        </Link>
+                      ) : (
+                        <Link href="/orders" className="cursor-pointer">
+                          <Package className="mr-2 h-4 w-4" />
+                          <span>My Orders</span>
+                        </Link>
+                      )}
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      onClick={handleLogout}
+                      className="cursor-pointer text-red-600 focus:text-red-600"
+                    >
+                      <LogOut className="mr-2 h-4 w-4" />
+                      <span>Logout</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <Link href="/signin" className="relative group">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="group p-1 sm:p-2 cursor-pointer"
+                  >
+                    <User className="h-4 sm:h-5 w-4 sm:w-5 transition-colors group-hover:text-primary" />
+                  </Button>
+                </Link>
+              )}
+
+              {/* Theme Toggle */}
+              <ModeToggle />
+
+              {/* Mobile Menu Button */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="lg:hidden p-1 sm:p-2"
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              >
+                {isMobileMenuOpen ? (
+                  <X className="h-4 sm:h-5 w-4 sm:w-5" />
+                ) : (
+                  <Menu className="h-4 sm:h-5 w-4 sm:w-5" />
+                )}
+              </Button>
+            </div>
+          </div>
+
+          {/* Mobile Navigation */}
+          {isMobileMenuOpen && (
+            <div className="lg:hidden border-t py-3 sm:py-4 animate-in slide-in-from-top-2">
+              <CategoryDropdown onClose={() => setIsMobileMenuOpen(false)} />
+            </div>
+          )}
+        </div>
+      </header>
+
+      {/* Cart Slider */}
+      <CartSlider isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+
+      {/* Wishlist Slider */}
+      <WishlistSlider
+        isOpen={isWishlistOpen}
+        onClose={() => setIsWishlistOpen(false)}
+      />
+    </>
+  );
+}

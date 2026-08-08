@@ -1,0 +1,47 @@
+import { tagTypes } from "@/redux/tagTypes/tagTypes";
+import { baseApi } from "../baseApi";
+
+export const orderApi = baseApi.injectEndpoints({
+  endpoints: (builder) => ({
+    createOrder: builder.mutation({
+      query: (data) => ({
+        url: '/orders/create-order',
+        method: 'POST',
+        data,
+      }),
+      invalidatesTags: [tagTypes.ORDER, tagTypes.CART],
+    }),
+    getAllOrders: builder.query({
+      query: (arg) => ({
+        url: '/orders',
+        method: 'GET',
+        params: arg
+      }),
+      providesTags: [tagTypes.ORDER],
+    }),
+    getSingleOrder: builder.query({
+      query: (id) => ({
+        url: `/orders/${id}`,
+        method: 'GET',
+      }),
+      providesTags: [tagTypes.ORDER],
+    }),
+    updateOrder: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `/orders/${id}`,
+        method: 'PATCH',
+        data,
+      }),
+      invalidatesTags: [tagTypes.ORDER],
+    }),
+    deleteOrder: builder.mutation({
+      query: (id) => ({
+        url: `/orders/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: [tagTypes.ORDER],
+    }),
+  }),
+});
+
+export const { useCreateOrderMutation, useGetAllOrdersQuery, useGetSingleOrderQuery, useUpdateOrderMutation, useDeleteOrderMutation } = orderApi;
