@@ -1,38 +1,40 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useGetCartQuery } from "@/redux/api/cart/cartApi"
-import { useAppSelector } from "@/redux/hooks/hooks"
-import type { ICartItem } from "@/types"
-import { toast } from "sonner"
-import CheckoutHeader from "./CheckoutHeader"
-import CheckoutLoading from "./CheckoutLoading"
-import CheckoutError from "./CheckoutError"
-import CheckoutEmpty from "./CheckoutEmpty"
-import CheckoutLoginRequired from "./CheckoutLoginRequired"
-import UserInfoCard from "./UserInfoCard"
-import ShippingForm from "./ShippingForm"
-import PaymentMethodCard from "./PaymentMethodCard"
-import OrderSummaryCard from "./OrderSummaryCard"
-import { useCreateOrderMutation } from "@/redux/api/order/orderApi"
-import { useCreateCheckoutSessionMutation } from "@/redux/api/payment/paymentApi"
-import { useRouter } from "next/navigation"
+import { useState } from "react";
+import { useGetCartQuery } from "@/redux/api/cart/cartApi";
+import { useAppSelector } from "@/redux/hooks/hooks";
+import type { ICartItem } from "@/types";
+import { toast } from "sonner";
+import CheckoutHeader from "./CheckoutHeader";
+import CheckoutLoading from "./CheckoutLoading";
+import CheckoutError from "./CheckoutError";
+import CheckoutEmpty from "./CheckoutEmpty";
+import CheckoutLoginRequired from "./CheckoutLoginRequired";
+import UserInfoCard from "./UserInfoCard";
+import ShippingForm from "./ShippingForm";
+import PaymentMethodCard from "./PaymentMethodCard";
+import OrderSummaryCard from "./OrderSummaryCard";
+import { useCreateOrderMutation } from "@/redux/api/order/orderApi";
+import { useCreateCheckoutSessionMutation } from "@/redux/api/payment/paymentApi";
+import { useRouter } from "next/navigation";
 
 const CheckoutPage = () => {
-  const [isProcessing, setIsProcessing] = useState(false)
-  const [paymentMethod, setPaymentMethod] = useState<"pay_now" | "pay_later">("pay_now")
-  const { user } = useAppSelector((state) => state.auth)
-  const { data, isLoading, error } = useGetCartQuery({})
-  const cartItems: ICartItem[] = data?.data?.items || []
-  const [createOrderToDb] = useCreateOrderMutation()
-  const [createPayment] = useCreateCheckoutSessionMutation()
-  const router = useRouter()
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<"pay_now" | "pay_later">(
+    "pay_now",
+  );
+  const { user } = useAppSelector((state) => state.auth);
+  const { data, isLoading, error } = useGetCartQuery({});
+  const cartItems: ICartItem[] = data?.data?.[0]?.items || [];
+  const [createOrderToDb] = useCreateOrderMutation();
+  const [createPayment] = useCreateCheckoutSessionMutation();
+  const router = useRouter();
 
   const getTotalPrice = () => {
     return cartItems.reduce((total, item) => {
-      return total + item.product.price * item.quantity
-    }, 0)
-  }
+      return total + item.product.price * item.quantity;
+    }, 0);
+  };
 
   const createOrder = async () => {
     const orderData = {
@@ -40,78 +42,75 @@ const CheckoutPage = () => {
       orderItems: cartItems.map((item) => ({
         productId: item.product.id,
         quantity: item.quantity,
-        price: item.product.price
+        price: item.product.price,
       })),
-    }
+    };
 
     // Simulate API call to create order
-    const orderResponse = await createOrderToDb(orderData).unwrap()
+    const orderResponse = await createOrderToDb(orderData).unwrap();
 
-    toast.success("Order Created Successfully..")
+    toast.success("Order Created Successfully..");
 
-    return orderResponse
-  }
+    return orderResponse;
+  };
 
   const initiatePayment = async (orderId: string, amount: number) => {
     const paymentData = {
       amount: amount,
       currency: "usd",
       orderId: orderId,
-    }
+    };
 
-    console.log("Initiating payment:", paymentData)
+    console.log("Initiating payment:", paymentData);
 
     // Simulate payment API call
-    const paymentResponse = await createPayment(paymentData).unwrap()
+    const paymentResponse = await createPayment(paymentData).unwrap();
 
-    if(paymentResponse.success){
-      router.push(`${paymentResponse.data.url}`)
+    if (paymentResponse.success) {
+      router.push(`${paymentResponse.data.url}`);
     }
-    
 
-    return paymentResponse
-  }
+    return paymentResponse;
+  };
 
   const handlePlaceOrder = async () => {
-    setIsProcessing(true)
+    setIsProcessing(true);
 
     try {
       // Create order first
-      const orderResponse = await createOrder()
+      const orderResponse = await createOrder();
 
       if (paymentMethod === "pay_now") {
         // Initiate payment for online payment
-        await initiatePayment(orderResponse.data.id, getTotalPrice())
-        toast.success("Order created and payment initiated successfully!")
+        await initiatePayment(orderResponse.data.id, getTotalPrice());
+        toast.success("Order created and payment initiated successfully!");
         // Redirect to payment gateway or success page
       } else {
-       
-        toast.success("Order placed successfully! You can pay upon delivery.")
-         router.push('/order-success')
+        toast.success("Order placed successfully! You can pay upon delivery.");
+        router.push("/order-success");
       }
-
     } catch (error) {
-      console.error("Checkout error:", error)
-      toast.error("Failed to process order. Please try again.")
+      console.error("Checkout error:", error);
+      toast.error("Failed to process order. Please try again.");
     } finally {
-      setIsProcessing(false)
+      setIsProcessing(false);
     }
-  }
+  };
 
   if (isLoading) {
-    return <CheckoutLoading />
+    return <CheckoutLoading />;
   }
 
   if (error) {
-    return <CheckoutError />
+    return <CheckoutError />;
   }
 
   if (!user) {
-    return <CheckoutLoginRequired />
+    return <CheckoutLoginRequired />;
   }
 
   if (cartItems.length === 0) {
-    return <CheckoutEmpty />
+    return <CheckoutEmpty />;
   }
 
   return (
@@ -124,7 +123,10 @@ const CheckoutPage = () => {
           <div className="xl:col-span-2 space-y-6">
             <UserInfoCard user={user} />
             <ShippingForm user={user} />
-            <PaymentMethodCard paymentMethod={paymentMethod} setPaymentMethod={setPaymentMethod} />
+            <PaymentMethodCard
+              paymentMethod={paymentMethod}
+              setPaymentMethod={setPaymentMethod}
+            />
           </div>
 
           {/* Order Summary Sidebar */}
@@ -142,7 +144,7 @@ const CheckoutPage = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CheckoutPage
+export default CheckoutPage;
