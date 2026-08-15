@@ -1,9 +1,8 @@
+# 🛍️ NexCart – Single Vendor E-commerce Platform
 
-# 🛍️ DeviceMart – Single Vendor E-commerce Platform
+**NexCart** is a modern, full-featured e-commerce platform built with a single vendor in mind. It includes product browsing, cart and wishlist features, order tracking, Stripe-powered checkout, and a dynamic admin dashboard for seamless store management.
 
-**DeviceMart** is a modern, full-featured e-commerce platform built with a single vendor in mind. It includes product browsing, cart and wishlist features, order tracking, Stripe-powered checkout, and a dynamic admin dashboard for seamless store management.
-
-Built with performance and scalability in mind using **Next.js**, **TypeScript**, **Redux**, **ShadCN UI**, and **Framer Motion**, DeviceMart delivers a responsive, intuitive shopping experience.
+Built with performance and scalability in mind using **Next.js**, **TypeScript**, **Redux**, **ShadCN UI**, and **Framer Motion**, NexCart delivers a responsive, intuitive shopping experience.
 
 ---
 
@@ -52,7 +51,7 @@ NEXT_PUBLIC_API_URL=https://single-vendor-backend-zz7x.onrender.com/api/v1
 NEXT_PUBLIC_EMAILJS_SERVICE_ID=
 NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=
 NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=
-````
+```
 
 > ⚠️ Never expose private keys or sensitive data in public repositories.
 
@@ -62,7 +61,7 @@ NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=
 
 ```bash
 # Clone the repo
-git clone https://github.com/your-username/devicemart-frontend.git
+git clone https://github.com/your-username/NexCart-frontend.git
 
 # Install dependencies
 npm install
@@ -90,7 +89,3 @@ MIT License
 **Shohaib Hossain**
 🌐 [Portfolio](https://shohaib-hossain.netlify.app/)
 📧 Available upon request
-
-
-
-

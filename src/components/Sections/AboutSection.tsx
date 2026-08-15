@@ -1,9 +1,7 @@
-
-
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { CheckCircle, Award, Users, Globe, Star } from "lucide-react"
-import Image from "next/image"
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { CheckCircle, Award, Users, Globe, Star } from "lucide-react";
+import Image from "next/image";
 
 const features = [
   {
@@ -30,30 +28,37 @@ const features = [
     description: "Serving customers in over 50 countries worldwide",
     color: "text-purple-600 dark:text-purple-400",
   },
-]
+];
 
 const stats = [
   { value: "10K+", label: "Happy Customers" },
   { value: "5K+", label: "Products Sold" },
   { value: "50+", label: "Countries Served" },
   { value: "4+", label: "Years Experience" },
-]
+];
 
 export function AboutSection() {
   return (
-    <section id="about" className="py-6 bg-gradient-to-br from-background to-muted/30">
+    <section
+      id="about"
+      className="py-6 bg-gradient-to-br from-background to-muted/30"
+    >
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="text-center mb-12 animate-in slide-in-from-bottom-10 duration-1000">
-          <Badge variant="outline" className="mb-4 border-primary/20 text-primary">
-            About DeviceMart
+          <Badge
+            variant="outline"
+            className="mb-4 border-primary/20 text-primary"
+          >
+            About NexCart
           </Badge>
           <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
             Your Trusted Shopping Partner Since 2020
           </h2>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-            We started with a simple mission: to make quality products accessible to everyone. Today, we&apos;re proud to
-            serve thousands of happy customers worldwide.
+            We started with a simple mission: to make quality products
+            accessible to everyone. Today, we&apos;re proud to serve thousands
+            of happy customers worldwide.
           </p>
         </div>
 
@@ -69,12 +74,16 @@ export function AboutSection() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-lg">Our Mission</h3>
-                    <p className="text-sm text-muted-foreground">Excellence in every product</p>
+                    <p className="text-sm text-muted-foreground">
+                      Excellence in every product
+                    </p>
                   </div>
                 </div>
                 <p className="text-muted-foreground">
-                  Our commitment to excellence, sustainability, and customer satisfaction has made us a leader in the
-                  ecommerce space.We believe in providing not just products, but solutions that enhance your life.
+                  Our commitment to excellence, sustainability, and customer
+                  satisfaction has made us a leader in the ecommerce space.We
+                  believe in providing not just products, but solutions that
+                  enhance your life.
                 </p>
               </CardContent>
             </Card>
@@ -88,8 +97,12 @@ export function AboutSection() {
                   style={{ animationDelay: `${(index + 2) * 150}ms` }}
                 >
                   <CardContent className="p-4 text-center">
-                    <div className="text-2xl font-bold text-primary mb-1">{stat.value}</div>
-                    <div className="text-xs text-muted-foreground">{stat.label}</div>
+                    <div className="text-2xl font-bold text-primary mb-1">
+                      {stat.value}
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      {stat.label}
+                    </div>
                   </CardContent>
                 </Card>
               ))}
@@ -103,7 +116,7 @@ export function AboutSection() {
                 <CardContent className="p-0">
                   <Image
                     src="https://st.depositphotos.com/1038076/4908/i/450/depositphotos_49080337-stock-photo-about-us.jpg"
-                    alt="About DeviceMart"
+                    alt="About NexCart"
                     width={400}
                     height={400}
                     className="w-full h-[400px] object-cover"
@@ -125,7 +138,9 @@ export function AboutSection() {
 
           {/* Right Content - Features */}
           <div className="lg:col-span-1 space-y-4 animate-in slide-in-from-right-10 duration-1000 delay-700">
-            <h3 className="text-xl font-semibold mb-4 text-center lg:text-left">Why Choose Us?</h3>
+            <h3 className="text-xl font-semibold mb-4 text-center lg:text-left">
+              Why Choose Us?
+            </h3>
             {features.map((feature, index) => (
               <Card
                 key={index}
@@ -134,14 +149,18 @@ export function AboutSection() {
               >
                 <CardContent className="p-4">
                   <div className="flex items-start gap-3">
-                    <div className={`p-2 rounded-lg bg-muted group-hover:scale-110 transition-transform duration-300`}>
+                    <div
+                      className={`p-2 rounded-lg bg-muted group-hover:scale-110 transition-transform duration-300`}
+                    >
                       <feature.icon className={`h-5 w-5 ${feature.color}`} />
                     </div>
                     <div className="flex-1">
                       <h4 className="font-semibold text-sm mb-1 group-hover:text-primary transition-colors">
                         {feature.title}
                       </h4>
-                      <p className="text-xs text-muted-foreground leading-relaxed">{feature.description}</p>
+                      <p className="text-xs text-muted-foreground leading-relaxed">
+                        {feature.description}
+                      </p>
                     </div>
                   </div>
                 </CardContent>
@@ -168,5 +187,5 @@ export function AboutSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }

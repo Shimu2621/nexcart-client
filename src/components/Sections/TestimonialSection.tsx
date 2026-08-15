@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState, useEffect, useRef, useCallback } from "react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Star, Quote, ChevronLeft, ChevronRight} from "lucide-react"
-import Image from "next/image"
+import { useState, useEffect, useRef, useCallback } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Star, Quote, ChevronLeft, ChevronRight } from "lucide-react";
+import Image from "next/image";
 
 const testimonials = [
   {
@@ -17,7 +17,7 @@ const testimonials = [
     avatar: "https://picsum.photos/seed/user1/80/80",
     rating: 5,
     content:
-      "DeviceMart has completely transformed my shopping experience. The quality of products is exceptional, and the customer service is outstanding. I've been a loyal customer for over 2 years now!",
+      "NexCart has completely transformed my shopping experience. The quality of products is exceptional, and the customer service is outstanding. I've been a loyal customer for over 2 years now!",
     verified: true,
   },
   {
@@ -27,7 +27,7 @@ const testimonials = [
     avatar: "https://picsum.photos/seed/user2/80/80",
     rating: 5,
     content:
-      "As someone who's very particular about electronics, I'm impressed by DeviceMart's product selection and authenticity. Fast shipping and great prices make it my go-to store.",
+      "As someone who's very particular about electronics, I'm impressed by NexCart's product selection and authenticity. Fast shipping and great prices make it my go-to store.",
     verified: true,
   },
   {
@@ -37,7 +37,7 @@ const testimonials = [
     avatar: "https://picsum.photos/seed/user3/80/80",
     rating: 5,
     content:
-      "The variety and quality of products available on DeviceMart is amazing. I've furnished my entire office through their platform. Highly recommend to anyone looking for reliable shopping.",
+      "The variety and quality of products available on NexCart is amazing. I've furnished my entire office through their platform. Highly recommend to anyone looking for reliable shopping.",
     verified: true,
   },
   {
@@ -47,7 +47,7 @@ const testimonials = [
     avatar: "https://picsum.photos/seed/user4/80/80",
     rating: 5,
     content:
-      "DeviceMart's user-friendly platform and carefully vetted products make shopping a breeze. Their support team is always ready to help, making every purchase a pleasure!",
+      "NexCart's user-friendly platform and carefully vetted products make shopping a breeze. Their support team is always ready to help, making every purchase a pleasure!",
     verified: true,
   },
   {
@@ -57,168 +57,179 @@ const testimonials = [
     avatar: "https://picsum.photos/seed/user5/80/80",
     rating: 5,
     content:
-      "I love the curated selection at DeviceMart. The products are high-quality, and the attention to detail aligns perfectly with my expectations. Highly recommend!",
+      "I love the curated selection at NexCart. The products are high-quality, and the attention to detail aligns perfectly with my expectations. Highly recommend!",
     verified: true,
   },
-]
+];
 
 export function TestimonialsSection() {
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [slidesToShow, setSlidesToShow] = useState(4)
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true)
-  const [isTransitioning, setIsTransitioning] = useState(false)
-  const sliderRef = useRef<HTMLDivElement>(null)
-  const touchStartX = useRef(0)
-  const touchEndX = useRef(0)
-  const autoPlayRef = useRef<NodeJS.Timeout | null>(null)
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [slidesToShow, setSlidesToShow] = useState(4);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const sliderRef = useRef<HTMLDivElement>(null);
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+  const autoPlayRef = useRef<NodeJS.Timeout | null>(null);
 
   // Create infinite loop by duplicating testimonials
   const extendedTestimonials = [
     ...testimonials.slice(-slidesToShow), // Add last items at the beginning
     ...testimonials,
     ...testimonials.slice(0, slidesToShow), // Add first items at the end
-  ]
+  ];
 
   // Responsive slides calculation
   useEffect(() => {
     const updateSlidesToShow = () => {
-      const width = window.innerWidth
+      const width = window.innerWidth;
       if (width >= 1024) {
-        setSlidesToShow(4) // Large screens
+        setSlidesToShow(4); // Large screens
       } else if (width >= 768) {
-        setSlidesToShow(3) // Medium screens
+        setSlidesToShow(3); // Medium screens
       } else if (width >= 640) {
-        setSlidesToShow(2) // Small-medium screens
+        setSlidesToShow(2); // Small-medium screens
       } else {
-        setSlidesToShow(1) // Small screens
+        setSlidesToShow(1); // Small screens
       }
-    }
+    };
 
-    updateSlidesToShow()
-    window.addEventListener("resize", updateSlidesToShow)
-    return () => window.removeEventListener("resize", updateSlidesToShow)
-  }, [])
+    updateSlidesToShow();
+    window.addEventListener("resize", updateSlidesToShow);
+    return () => window.removeEventListener("resize", updateSlidesToShow);
+  }, []);
 
   // Reset current index when slidesToShow changes
   useEffect(() => {
-    setCurrentIndex(slidesToShow)
-  }, [slidesToShow])
+    setCurrentIndex(slidesToShow);
+  }, [slidesToShow]);
 
   const nextSlide = useCallback(() => {
-    if (isTransitioning) return
-    setIsTransitioning(true)
-    setCurrentIndex((prev) => prev + 1)
-  }, [isTransitioning])
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    setCurrentIndex((prev) => prev + 1);
+  }, [isTransitioning]);
 
   const prevSlide = useCallback(() => {
-    if (isTransitioning) return
-    setIsTransitioning(true)
-    setCurrentIndex((prev) => prev - 1)
-  }, [isTransitioning])
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    setCurrentIndex((prev) => prev - 1);
+  }, [isTransitioning]);
 
   // Handle infinite loop transitions
   useEffect(() => {
-    if (!isTransitioning) return
+    if (!isTransitioning) return;
 
     const timer = setTimeout(() => {
-      setIsTransitioning(false)
+      setIsTransitioning(false);
 
       // Reset position for infinite loop
       if (currentIndex >= testimonials.length + slidesToShow) {
-        setCurrentIndex(slidesToShow)
+        setCurrentIndex(slidesToShow);
       } else if (currentIndex <= 0) {
-        setCurrentIndex(testimonials.length)
+        setCurrentIndex(testimonials.length);
       }
-    }, 500) // Match transition duration
+    }, 500); // Match transition duration
 
-    return () => clearTimeout(timer)
-  }, [currentIndex, isTransitioning, slidesToShow])
+    return () => clearTimeout(timer);
+  }, [currentIndex, isTransitioning, slidesToShow]);
 
   // Auto-play functionality
   useEffect(() => {
-    if (!isAutoPlaying) return
+    if (!isAutoPlaying) return;
 
     autoPlayRef.current = setInterval(() => {
-      nextSlide()
-    }, 3000)
+      nextSlide();
+    }, 3000);
 
     return () => {
       if (autoPlayRef.current) {
-        clearInterval(autoPlayRef.current)
+        clearInterval(autoPlayRef.current);
       }
-    }
-  }, [isAutoPlaying, nextSlide])
+    };
+  }, [isAutoPlaying, nextSlide]);
 
   // const toggleAutoPlay = () => {
   //   setIsAutoPlaying(!isAutoPlaying)
   // }
 
   const goToSlide = (index: number) => {
-    if (isTransitioning) return
-    setIsAutoPlaying(false)
-    setIsTransitioning(true)
-    setCurrentIndex(index + slidesToShow)
-  }
+    if (isTransitioning) return;
+    setIsAutoPlaying(false);
+    setIsTransitioning(true);
+    setCurrentIndex(index + slidesToShow);
+  };
 
   // Touch handlers for mobile swipe
   const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX
-  }
+    touchStartX.current = e.touches[0].clientX;
+  };
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    touchEndX.current = e.touches[0].clientX
-  }
+    touchEndX.current = e.touches[0].clientX;
+  };
 
   const handleTouchEnd = () => {
-    if (!touchStartX.current || !touchEndX.current) return
+    if (!touchStartX.current || !touchEndX.current) return;
 
-    const distance = touchStartX.current - touchEndX.current
-    const isLeftSwipe = distance > 50
-    const isRightSwipe = distance < -50
+    const distance = touchStartX.current - touchEndX.current;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
 
     if (isLeftSwipe) {
-      nextSlide()
+      nextSlide();
     } else if (isRightSwipe) {
-      prevSlide()
+      prevSlide();
     }
-  }
+  };
 
   // Pause auto-play on hover
   const handleMouseEnter = () => {
     if (autoPlayRef.current) {
-      clearInterval(autoPlayRef.current)
+      clearInterval(autoPlayRef.current);
     }
-  }
+  };
 
   const handleMouseLeave = () => {
     if (isAutoPlaying) {
       autoPlayRef.current = setInterval(() => {
-        nextSlide()
-      }, 3000)
+        nextSlide();
+      }, 3000);
     }
-  }
+  };
 
-  const slideWidth = 100 / slidesToShow
+  const slideWidth = 100 / slidesToShow;
   const actualIndex =
-    (((currentIndex - slidesToShow) % testimonials.length) + testimonials.length) % testimonials.length
+    (((currentIndex - slidesToShow) % testimonials.length) +
+      testimonials.length) %
+    testimonials.length;
 
   return (
     <section className="py-6 bg-muted/30">
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="text-center mb-8 animate-in slide-in-from-bottom-10 duration-1000">
-          <Badge variant="outline" className="mb-4 text-primary border-primary/20">
+          <Badge
+            variant="outline"
+            className="mb-4 text-primary border-primary/20"
+          >
             Testimonials
           </Badge>
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">What Our Customers Say</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            What Our Customers Say
+          </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Don&apos;t just take our word for it. Here&apos;s what our satisfied customers have to say about their experience
+            Don&apos;t just take our word for it. Here&apos;s what our satisfied
+            customers have to say about their experience
           </p>
         </div>
 
         {/* Testimonials Slider */}
-        <div className="relative" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-
+        <div
+          className="relative"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
           {/* Slider Container */}
           <div
             ref={sliderRef}
@@ -249,12 +260,17 @@ export function TestimonialsSection() {
                       {/* Rating */}
                       <div className="flex items-center space-x-1 mb-4">
                         {[...Array(testimonial.rating)].map((_, i) => (
-                          <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                          <Star
+                            key={i}
+                            className="w-4 h-4 fill-yellow-400 text-yellow-400"
+                          />
                         ))}
                       </div>
 
                       {/* Content */}
-                      <p className="text-muted-foreground mb-6 leading-relaxed flex-grow">&ldquo;{testimonial.content}&ldquo;</p>
+                      <p className="text-muted-foreground mb-6 leading-relaxed flex-grow">
+                        &ldquo;{testimonial.content}&ldquo;
+                      </p>
 
                       {/* Author */}
                       <div className="flex items-center space-x-4 mt-auto">
@@ -267,14 +283,18 @@ export function TestimonialsSection() {
                         />
                         <div>
                           <div className="flex items-center space-x-2">
-                            <h4 className="font-semibold">{testimonial.name}</h4>
+                            <h4 className="font-semibold">
+                              {testimonial.name}
+                            </h4>
                             {testimonial.verified && (
                               <Badge variant="secondary" className="text-xs">
                                 Verified
                               </Badge>
                             )}
                           </div>
-                          <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {testimonial.role}
+                          </p>
                         </div>
                       </div>
                     </CardContent>
@@ -321,15 +341,22 @@ export function TestimonialsSection() {
 
         {/* Social Proof */}
         <div className="text-center mt-4 animate-in slide-in-from-bottom-10 duration-1000 delay-1000">
-          <p className="text-muted-foreground mb-2">Join thousands of satisfied customers</p>
+          <p className="text-muted-foreground mb-2">
+            Join thousands of satisfied customers
+          </p>
           <div className="flex items-center justify-center space-x-1">
             {[...Array(5)].map((_, i) => (
-              <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+              <Star
+                key={i}
+                className="w-5 h-5 fill-yellow-400 text-yellow-400"
+              />
             ))}
-            <span className="ml-2 font-semibold">4.9/5 from 10,000+ reviews</span>
+            <span className="ml-2 font-semibold">
+              4.9/5 from 10,000+ reviews
+            </span>
           </div>
         </div>
       </div>
     </section>
-  )
+  );
 }

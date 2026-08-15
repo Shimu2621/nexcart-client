@@ -97,7 +97,7 @@ const PaymentSuccessContent = ({ paymentData }: PaymentSuccessContentProps) => {
     </head>
     <body>
       <div class="header">
-        <h1>DeviceMart</h1>
+        <h1>NexCart</h1>
         <div class="success-badge">Payment Successful</div>
         <h2>Payment Receipt</h2>
       </div>
@@ -125,8 +125,8 @@ const PaymentSuccessContent = ({ paymentData }: PaymentSuccessContentProps) => {
       <div class="info-row">
         <span class="label">Payment Method:</span>
         <span class="value">${paymentData.payment_intent.payment_method.card.brand.toUpperCase()} •••• ${
-      paymentData.payment_intent.payment_method.card.last4
-    }</span>
+          paymentData.payment_intent.payment_method.card.last4
+        }</span>
       </div>
       
       <hr style="margin: 20px 0;">
@@ -135,13 +135,13 @@ const PaymentSuccessContent = ({ paymentData }: PaymentSuccessContentProps) => {
         <span class="label total">Total Amount:</span>
         <span class="total">${formatPrice(
           paymentData.amount_total,
-          paymentData.currency
+          paymentData.currency,
         )}</span>
       </div>
       
       <div class="footer">
         <p>Thank you for your purchase!</p>
-        <p>DeviceMart - Your trusted shopping partner</p>
+        <p>NexCart - Your trusted shopping partner</p>
       </div>
     </body>
     </html>
@@ -166,7 +166,7 @@ const PaymentSuccessContent = ({ paymentData }: PaymentSuccessContentProps) => {
 
       toast.success("Receipt downloaded successfully!");
     } catch (error) {
-      console.log(error)
+      console.log(error);
       toast.error("Failed to download receipt");
     } finally {
       setIsDownloading(false);
@@ -331,9 +331,7 @@ const PaymentSuccessContent = ({ paymentData }: PaymentSuccessContentProps) => {
         <div className="text-center mt-8 p-4 bg-white/50 dark:bg-card/50 rounded-lg backdrop-blur-sm">
           <p className="text-muted-foreground">
             Thank you for your purchase! A confirmation email has been sent to{" "}
-            <span className="font-medium">
-              {user?.email}
-            </span>
+            <span className="font-medium">{user?.email}</span>
           </p>
         </div>
       </div>

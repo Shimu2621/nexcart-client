@@ -115,7 +115,7 @@ export default function SignUpPage() {
             <span className="text-primary-foreground font-bold text-lg">D</span>
           </div>
           <span className="font-bold text-xl bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-            DeviceMart
+            NexCart
           </span>
         </Link>
         <div className="flex items-center space-x-4">
@@ -150,7 +150,7 @@ export default function SignUpPage() {
 
           <div className="text-center space-y-4">
             <h1 className="text-4xl font-bold bg-gradient-to-r from-accent to-primary bg-clip-text text-transparent">
-              Join DeviceMart Today!
+              Join NexCart Today!
             </h1>
             <p className="text-lg text-muted-foreground max-w-md">
               Create your account and start your amazing shopping journey with

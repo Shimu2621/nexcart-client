@@ -195,7 +195,7 @@ export function AppSidebar() {
       if (item.children) {
         // Check if current path matches any child route
         const isActive = item.children.some(
-          (child) => child.url && pathname.startsWith(child.url)
+          (child) => child.url && pathname.startsWith(child.url),
         );
         initialOpenMenus[item.title] = isActive;
       }
@@ -233,7 +233,7 @@ export function AppSidebar() {
               </span>
             </div>
             <span className="font-bold text-xl bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              DeviceMart
+              NexCart
             </span>
           </Link>
           <div>
@@ -253,7 +253,7 @@ export function AppSidebar() {
                 if (item.children) {
                   const isOpen = openMenus[item.title];
                   const hasActiveChild = item.children.some((child) =>
-                    isActiveRoute(child.url)
+                    isActiveRoute(child.url),
                   );
 
                   return (
@@ -292,9 +292,7 @@ export function AppSidebar() {
                               <SidebarMenuButton
                                 asChild
                                 className={`hover:bg-accent/50 transition-all duration-200 ${
-                                  isActiveRoute(child.url)
-                                    ? " "
-                                    : ""
+                                  isActiveRoute(child.url) ? " " : ""
                                 }`}
                               >
                                 <Link
