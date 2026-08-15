@@ -32,6 +32,7 @@ const FilterRange = ({ filterOption, value, onChange }: FilterRangeProps) => {
     setLocalMax(value.max?.toString() || "");
   }, [value]);
 
+  // Handles clicking the "Apply Range" button.
   const handleApply = () => {
     const min = localMin ? Number.parseFloat(localMin) : undefined;
     const max = localMax ? Number.parseFloat(localMax) : undefined;
