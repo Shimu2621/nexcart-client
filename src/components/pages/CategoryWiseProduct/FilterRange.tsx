@@ -22,6 +22,7 @@ interface FilterRangeProps {
   onChange: (value: { min?: number; max?: number }) => void;
 }
 
+// Defines the FilterRange component
 const FilterRange = ({ filterOption, value, onChange }: FilterRangeProps) => {
   const [localMin, setLocalMin] = useState<string>(value.min?.toString() || "");
   const [localMax, setLocalMax] = useState<string>(value.max?.toString() || "");
