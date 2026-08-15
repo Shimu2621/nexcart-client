@@ -114,13 +114,18 @@ const FilterRange = ({ filterOption, value, onChange }: FilterRangeProps) => {
         Apply Range
       </Button>
 
+      {/* Displays the currently applied range if a value exists. */}
       {hasValue && (
         <div className="text-xs text-muted-foreground text-center">
+          {/* Displays different text depending on whether min, max, or both are available. */}
           {value.min !== undefined && value.max !== undefined
-            ? `${filterOption.unit || ""}${value.min} - ${filterOption.unit || ""}${value.max}`
-            : value.min !== undefined
+            ? // When both minimum and maximum exist, display "min - max".
+              `${filterOption.unit || ""}${value.min} - ${filterOption.unit || ""}${value.max}`
+            : // When only minimum exists, display "From min".
+              value.min !== undefined
               ? `From ${filterOption.unit || ""}${value.min}`
-              : `Up to ${filterOption.unit || ""}${value.max}`}
+              : // When only maximum exists, display "Up to max".
+                `Up to ${filterOption.unit || ""}${value.max}`}
         </div>
       )}
     </div>
