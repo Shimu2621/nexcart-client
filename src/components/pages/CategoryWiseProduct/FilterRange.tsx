@@ -15,6 +15,7 @@ interface FilterOption {
   unit: string | null;
 }
 
+// Defines the props that the FilterRange component expects
 interface FilterRangeProps {
   filterOption: FilterOption;
   value: { min?: number; max?: number };
