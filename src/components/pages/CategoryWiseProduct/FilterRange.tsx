@@ -44,6 +44,7 @@ const FilterRange = ({ filterOption, value, onChange }: FilterRangeProps) => {
     onChange({ min, max });
   };
 
+  // Handles clicking the "Clear" button.
   const handleClear = () => {
     setLocalMin("");
     setLocalMax("");
