@@ -51,6 +51,7 @@ const FilterRange = ({ filterOption, value, onChange }: FilterRangeProps) => {
     onChange({});
   };
 
+  // Determines whether a minimum or maximum value is currently selected
   const hasValue = value.min !== undefined || value.max !== undefined;
 
   return (
