@@ -1,16 +1,20 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { ShoppingCart, Eye, Clock } from "lucide-react"
-import Image from "next/image"
-import Link from "next/link"
-import { useGetAllProductsQuery } from "@/redux/api/product/productApi"
-import type { IProduct } from "@/types"
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { ShoppingCart, Eye, Clock } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useGetAllProductsQuery } from "@/redux/api/product/productApi";
+import type { IProduct } from "@/types";
+import { ShinyButton } from "../magicui/shiny-button";
+import { AuroraText } from "../magicui/aurora-text";
 
 export function FeaturedProducts() {
-  const { data: products, isLoading } = useGetAllProductsQuery({ featured: true })
+  const { data: products, isLoading } = useGetAllProductsQuery({
+    featured: true,
+  });
 
   if (isLoading) {
     return (
@@ -40,43 +44,51 @@ export function FeaturedProducts() {
           </div>
         </div>
       </section>
-    )
+    );
   }
 
-  const featuredProducts = products?.data || []
+  const featuredProducts = products?.data || [];
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "USD",
-    }).format(price)
-  }
+    }).format(price);
+  };
 
   const isDiscountValid = (product: IProduct) => {
-    if (!product.isDiscountActive || !product.discountValidUntil) return false
-    return new Date(product.discountValidUntil) > new Date()
-  }
+    if (!product.isDiscountActive || !product.discountValidUntil) return false;
+    return new Date(product.discountValidUntil) > new Date();
+  };
 
   const getDisplayPrice = (product: IProduct) => {
-    if (product.isDiscountActive && product.discountedPrice && isDiscountValid(product)) {
-      return product.discountedPrice
+    if (
+      product.isDiscountActive &&
+      product.discountedPrice &&
+      isDiscountValid(product)
+    ) {
+      return product.discountedPrice;
     }
-    return product.price
-  }
+    return product.price;
+  };
 
   const getOriginalPrice = (product: IProduct) => {
-    if (product.isDiscountActive && product.discountedPrice && isDiscountValid(product)) {
-      return product.price
+    if (
+      product.isDiscountActive &&
+      product.discountedPrice &&
+      isDiscountValid(product)
+    ) {
+      return product.price;
     }
-    return null
-  }
+    return null;
+  };
 
   return (
-    <section className="py-6 bg-muted/30">
-      <div className="container mx-auto px-4">
+    <section className="py-16 px-4 bg-muted/30">
+      <div className="container mx-auto px-4 flex flex-col items-center">
         {/* Section Header */}
         <div className="text-center mb-16 animate-in slide-in-from-bottom-10 duration-1000">
-          <Badge variant="outline" className="mb-4 border-primary/20 text-primary">
+          {/* <Badge variant="outline" className="mb-4 border-primary/20 text-primary">
             Featured Products
           </Badge>
           <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
@@ -84,6 +96,21 @@ export function FeaturedProducts() {
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Discover our most popular items loved by thousands of customers worldwide
+          </p> */}
+          {/* Section Heading */}
+          <ShinyButton className="relative inline-block px-6 py-3 rounded-full text-lg font-bold mb-4 bg-badge text-black overflow-hidden">
+            🛒 Featured Products
+          </ShinyButton>
+
+          <h2 className="text-4xl lg:text-5xl text-center font-bold text-forground mb-6">
+            Handpicked{" "}
+            <AuroraText className="text-blue-800 italic">Products</AuroraText>
+            <br /> Just For You
+          </h2>
+
+          <p className="text-center text-muted-foreground max-w-2xl mb-8">
+            Explore our most popular and trending product, carefully curated to
+            give you the best shopping experiences
           </p>
         </div>
 
@@ -100,7 +127,10 @@ export function FeaturedProducts() {
                 <div className="relative overflow-hidden rounded-t-lg">
                   <Link href={`/products/${product.id}`}>
                     <Image
-                      src={product.images[0] || "/placeholder.svg?height=300&width=300"}
+                      src={
+                        product.images[0] ||
+                        "/placeholder.svg?height=300&width=300"
+                      }
                       alt={product.name}
                       width={300}
                       height={300}
@@ -137,7 +167,12 @@ export function FeaturedProducts() {
                     {/* <Button size="icon" variant="secondary" className="h-8 w-8 bg-white/90 hover:bg-white">
                       <Heart className="h-4 w-4" />
                     </Button> */}
-                    <Button size="icon" variant="secondary" className="h-8 w-8 bg-white/90 hover:bg-white" asChild>
+                    <Button
+                      size="icon"
+                      variant="secondary"
+                      className="h-8 w-8 bg-white/90 hover:bg-white"
+                      asChild
+                    >
                       <Link href={`/products/${product.id}`}>
                         <Eye className="h-4 w-4" />
                       </Link>
@@ -162,7 +197,11 @@ export function FeaturedProducts() {
                         {product.brand.name}
                       </Badge>
                     )}
-                    {product.category && <span className="text-xs text-muted-foreground">{product.category.name}</span>}
+                    {product.category && (
+                      <span className="text-xs text-muted-foreground">
+                        {product.category.name}
+                      </span>
+                    )}
                   </div>
 
                   {/* Product Name */}
@@ -174,7 +213,9 @@ export function FeaturedProducts() {
 
                   {/* Price */}
                   <div className="flex items-center space-x-2 mb-4">
-                    <span className="text-2xl font-bold text-primary">{formatPrice(getDisplayPrice(product))}</span>
+                    <span className="text-2xl font-bold text-primary">
+                      {formatPrice(getDisplayPrice(product))}
+                    </span>
                     {getOriginalPrice(product) && (
                       <span className="text-lg text-muted-foreground line-through">
                         {formatPrice(getOriginalPrice(product)!)}
@@ -187,12 +228,16 @@ export function FeaturedProducts() {
                     {product.stock > 0 ? (
                       <div className="flex items-center gap-2">
                         <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                        <span className="text-sm text-green-600 dark:text-green-400">In Stock</span>
+                        <span className="text-sm text-green-600 dark:text-green-400">
+                          In Stock
+                        </span>
                       </div>
                     ) : (
                       <div className="flex items-center gap-2">
                         <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                        <span className="text-sm text-red-600 dark:text-red-400">Out of Stock</span>
+                        <span className="text-sm text-red-600 dark:text-red-400">
+                          Out of Stock
+                        </span>
                       </div>
                     )}
                   </div>
@@ -209,7 +254,9 @@ export function FeaturedProducts() {
               <ShoppingCart className="h-12 w-12 text-muted-foreground" />
             </div>
             <h3 className="text-xl font-semibold mb-2">No Featured Products</h3>
-            <p className="text-muted-foreground mb-6">Check back later for our latest featured items.</p>
+            <p className="text-muted-foreground mb-6">
+              Check back later for our latest featured items.
+            </p>
             <Button asChild>
               <Link href="/products">Browse All Products</Link>
             </Button>
@@ -226,5 +273,5 @@ export function FeaturedProducts() {
         )}
       </div>
     </section>
-  )
+  );
 }

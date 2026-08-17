@@ -1,35 +1,34 @@
 import { tagTypes } from "@/redux/tagTypes/tagTypes";
 import { baseApi } from "../baseApi";
 
-
 export const categoryApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     createCategory: builder.mutation({
       query: (data) => ({
-        url: '/categories/create-category',
-        method: 'POST',
+        url: "/categories/create-category",
+        method: "POST",
         data,
       }),
       invalidatesTags: [tagTypes.CATEGORY],
     }),
-    getAllCategories: builder.query({
+    getAllCategories: builder.query<any, void>({
       query: () => ({
-        url: '/categories',
-        method: 'GET',
+        url: "/categories",
+        method: "GET",
       }),
       providesTags: [tagTypes.CATEGORY],
     }),
     getSingleCategory: builder.query({
       query: (id) => ({
         url: `/categories/${id}`,
-        method: 'GET',
+        method: "GET",
       }),
       providesTags: [tagTypes.CATEGORY],
     }),
     updateCategory: builder.mutation({
       query: ({ id, data }) => ({
         url: `/categories/${id}`,
-        method: 'PATCH',
+        method: "PATCH",
         data,
       }),
       invalidatesTags: [tagTypes.CATEGORY],
@@ -37,11 +36,17 @@ export const categoryApi = baseApi.injectEndpoints({
     deleteCategory: builder.mutation({
       query: (id) => ({
         url: `/categories/${id}`,
-        method: 'DELETE',
+        method: "DELETE",
       }),
       invalidatesTags: [tagTypes.CATEGORY],
     }),
   }),
 });
 
-export const { useCreateCategoryMutation, useGetAllCategoriesQuery, useGetSingleCategoryQuery, useUpdateCategoryMutation, useDeleteCategoryMutation } = categoryApi;
+export const {
+  useCreateCategoryMutation,
+  useGetAllCategoriesQuery,
+  useGetSingleCategoryQuery,
+  useUpdateCategoryMutation,
+  useDeleteCategoryMutation,
+} = categoryApi;

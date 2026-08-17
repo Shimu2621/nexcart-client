@@ -54,7 +54,7 @@ export function Navbar({
   onWishlistClick: () => void;
 }) {
   const router = useRouter();
-  const [isScrolled, setIsScrolled] = useState(false);
+  // const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -164,18 +164,26 @@ export function Navbar({
               href="/"
               className="flex items-center space-x-2 flex-shrink-0"
             >
-              <div className="h-7 sm:h-8 w-7 sm:w-8 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-md">
+              {/* <div className="h-7 sm:h-8 w-7 sm:w-8 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-md">
                 <span className="text-primary-foreground font-bold text-base sm:text-lg">
                   N
                 </span>
+              </div> */}
+              <div className="h-8 w-8 bg-primary rounded-md flex items-center justify-center bg-gradient-to-r from-blue-800 to-rose-600">
+                <span className="text-primary-foreground font-bold text-lg ">
+                  N
+                </span>
               </div>
-              <span
+              {/* <span
                 className={`font-bold text-lg sm:text-xl hidden lg:flex ${
                   isScrolled
                     ? "bg-gradient-to-r from-white to-accent"
                     : "bg-gradient-to-r from-primary to-accent"
                 } bg-clip-text text-transparent`}
               >
+                NexCart
+              </span> */}
+              <span className="font-serif font-semibold text-xl text-rose-600">
                 NexCart
               </span>
             </Link>
