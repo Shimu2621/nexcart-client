@@ -235,6 +235,7 @@ import {
   Book,
   Gamepad2,
   LayoutGrid,
+  ChevronLeft,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -243,6 +244,7 @@ import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import type { Swiper as SwiperInstance } from "swiper";
 import Image from "next/image";
 import airpodImg from "@/assets/airpod.png";
 import iphoneImg from "@/assets/iphone.png";
@@ -316,9 +318,8 @@ const heroSlides = [
 
 export default function HeroSection() {
   const [activeCategory, setActiveCategory] = useState<number | null>(null);
-
+  const [swiper, setSwiper] = useState<SwiperInstance | null>(null);
   const { data, isLoading, isError } = useGetAllCategoriesQuery();
-
   const categories: ICategory[] = data?.data ?? [];
 
   if (isLoading) {
@@ -458,9 +459,70 @@ export default function HeroSection() {
           className="lg:col-span-3"
         >
           <div className="relative h-[450px] rounded-xl overflow-hidden">
-            <Swiper
+            {/* Previous Slide Button */}
+            <button
+              type="button"
+              onClick={() => swiper?.slidePrev()}
+              aria-label="Previous slide"
+              className="
+    absolute left-4 top-1/2 -translate-y-1/2 z-20
+    flex h-11 w-11 items-center justify-center
+    rounded-full
+    border border-white/30
+    bg-black/20
+    text-white
+    shadow-lg
+    backdrop-blur-md
+    transition-all duration-300
+    hover:bg-white
+    hover:text-gray-900
+    hover:scale-110
+    active:scale-95
+    focus:outline-none
+    focus:ring-2
+    focus:ring-white/70
+  "
+            >
+              <ChevronLeft className="h-6 w-6" strokeWidth={2.5} />
+            </button>
+
+            {/* Next Slide Button */}
+            <button
+              type="button"
+              onClick={() => swiper?.slideNext()}
+              aria-label="Next slide"
+              className="
+    absolute right-4 top-1/2 -translate-y-1/2 z-20
+    flex h-11 w-11 items-center justify-center
+    rounded-full
+    border border-white/30
+    bg-black/20
+    text-white
+    shadow-lg
+    backdrop-blur-md
+    transition-all duration-300
+    hover:bg-white
+    hover:text-gray-900
+    hover:scale-110
+    active:scale-95
+    focus:outline-none
+    focus:ring-2
+    focus:ring-white/70
+  "
+            >
+              <ChevronRight className="h-6 w-6" strokeWidth={2.5} />
+            </button>
+            {/* <Swiper
               modules={[Navigation, Pagination, Autoplay]}
               navigation
+              pagination={{ clickable: true }}
+              autoplay={{ delay: 5000 }}
+              loop
+              className="h-full"
+            > */}
+            <Swiper
+              modules={[Pagination, Autoplay]}
+              onSwiper={setSwiper}
               pagination={{ clickable: true }}
               autoplay={{ delay: 5000 }}
               loop
